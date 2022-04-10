@@ -4,22 +4,25 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.rogrigamer.recyclerview.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-
     //Passo1: Criar Classe MainViewModel estendendo do Android ViewModel
     private val viewModel: MainViewModel by viewModels()
+
+    private lateinit var binding: ActivityMainBinding
+
+    //para utilizar o adapter na nossa classe main inteira colocamos em uma variável
     private val adapter = MusicAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupObservables()
         setupRecyclerView()
-
     }
 
     override fun onStart() {
@@ -27,14 +30,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.getItems()
     }
 
+    //inicializar o adapter
     private fun setupRecyclerView() {
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(
             this, LinearLayoutManager.VERTICAL,
             false
         )
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+        with(binding) {
+            recyclerView.layoutManager = layoutManager
+            recyclerView.adapter = adapter
+        }
     }
 
     private fun setupObservables() {
